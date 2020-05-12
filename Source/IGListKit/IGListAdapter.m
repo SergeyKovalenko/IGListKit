@@ -1070,6 +1070,27 @@
     return [collectionView dequeueReusableSupplementaryViewOfKind:elementKind withReuseIdentifier:identifier forIndexPath:indexPath];
 }
 
+- (__kindof UICollectionReusableView *)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind
+                                                               withIdentifier:(NSString *)identifier
+                                                         forSectionController:(IGListSectionController *)sectionController
+                                                                        class:(Class)viewClass
+                                                                      atIndex:(NSInteger)index {
+    IGAssertMainThread();
+    IGParameterAssert(elementKind.length > 0);
+    IGParameterAssert(sectionController != nil);
+    IGParameterAssert(viewClass != nil);
+    IGParameterAssert(index >= 0);
+    UICollectionView *collectionView = self.collectionView;
+    IGAssert(collectionView != nil, @"Dequeueing cell of class %@ from section controller %@ without a collection view at index %li with supplementary view %@", NSStringFromClass(viewClass), sectionController, (long)index, elementKind);
+    NSString *viewIdentifier = IGListReusableViewIdentifier(viewClass, elementKind, identifier);
+    NSIndexPath *indexPath = [self indexPathForSectionController:sectionController index:index usePreviousIfInUpdateBlock:NO];
+    if (![self.registeredSupplementaryViewIdentifiers containsObject:viewIdentifier]) {
+        [self.registeredSupplementaryViewIdentifiers addObject:viewIdentifier];
+        [collectionView registerClass:viewClass forSupplementaryViewOfKind:elementKind withReuseIdentifier:viewIdentifier];
+    }
+    return [collectionView dequeueReusableSupplementaryViewOfKind:elementKind withReuseIdentifier:viewIdentifier forIndexPath:indexPath];
+}
+
 - (__kindof UICollectionReusableView *)dequeueReusableSupplementaryViewFromStoryboardOfKind:(NSString *)elementKind
                                                                              withIdentifier:(NSString *)identifier
                                                                        forSectionController:(IGListSectionController *)sectionController

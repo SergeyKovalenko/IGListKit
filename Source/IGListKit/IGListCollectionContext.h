@@ -216,6 +216,25 @@ NS_SWIFT_NAME(ListCollectionContext)
                                                                       atIndex:(NSInteger)index;
 
 /**
+Dequeues a supplementary view from the collection view reuse pool.
+
+@param elementKind The kind of supplementary view.
+@param identifier The identifier of the supplementary view.
+@param sectionController The section controller requesting this information.
+@param viewClass The class of the supplementary view.
+@param index The index of the supplementary view.
+
+@return A supplementary view dequeued from the reuse pool or a newly created one.
+
+@note This method uses a string representation of the view class as the identifier.
+ */
+- (__kindof UICollectionReusableView *)dequeueReusableSupplementaryViewOfKind:(NSString *)elementKind
+                                                               withIdentifier:(NSString *)identifier
+                                                         forSectionController:(IGListSectionController *)sectionController
+                                                                        class:(Class)viewClass
+                                                                      atIndex:(NSInteger)index;
+
+/**
  Dequeues a supplementary view from the collection view reuse pool.
 
  @param elementKind The kind of supplementary view.
